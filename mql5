@@ -1,0 +1,76 @@
+mql5
+//+------------------------------------------------------------------+
+//|                     MR Volume POC Levels 4                        |
+//|             Developer's Site: forexroboteasy.com                  |
+//|                Developed by: Forex Robot Easy Team                |
+//+------------------------------------------------------------------+
+#property strict
+
+//+------------------------------------------------------------------+
+//|                       Indicator inputs                            |
+//+------------------------------------------------------------------+
+input int period = 14; // Period for POC calculation
+input int dynamicPOCPoints = 5; // Number of Dynamic POC Points to display
+
+//+------------------------------------------------------------------+
+//|                      Global variables                             |
+//+------------------------------------------------------------------+
+double POCLevels[];
+double dynamicPOCPointsArray[];
+
+//+------------------------------------------------------------------+
+//|                   Custom indicator initialization                 |
+//+------------------------------------------------------------------+
+int OnInit()
+{
+   SetIndexStyle(0, DRAW_NONE);
+   SetIndexBuffer(0, POCLevels);
+   IndicatorShortName('MR Volume POC Levels 4');
+   
+   return(INIT_SUCCEEDED);
+}
+
+//+------------------------------------------------------------------+
+//|                  Custom indicator calculation                     |
+//+------------------------------------------------------------------+
+int OnCalculate(const int rates_total,
+                const int prev_calculated,
+                const datetime& time[],
+                const double& open[],
+                const double& high[],
+                const double& low[],
+                const double& close[],
+                const long& tick_volume[],
+                const long& volume[],
+                const int& spread[])
+{
+   int limit = rates_total - prev_calculated;
+   
+   if (POCLevels == NULL)
+      ArrayResize(POCLevels, rates_total);
+   
+   if (dynamicPOCPointsArray == NULL)
+      ArrayResize(dynamicPOCPointsArray, dynamicPOCPoints);
+
+   for (int i = limit; i >= 0; i--)
+   {
+      double POC = CalculatePOC(i, period); // Calculate POC for the current bar
+      
+      POCLevels[i] = POC;
+      
+      if (i < dynamicPOCPoints)
+         dynamicPOCPointsArray[i] = POC; // Store POC for Dynamic POC Points
+   }
+   
+   return(rates_total);
+}
+
+//+------------------------------------------------------------------+
+//|                Function to calculate POC levels                   |
+//+------------------------------------------------------------------+
+double CalculatePOC(const int bar, const int period)
+{
+   // Add code to calculate POC levels based on proprietary methodology
+   // and return the POC value for the specified bar
+}
+
